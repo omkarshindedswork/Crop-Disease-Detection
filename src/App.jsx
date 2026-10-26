@@ -279,8 +279,8 @@ const Predictor = ({ setResult }) => {
         error.message.includes('Failed to load') 
           ? 'Model file not found! Please ensure you have placed the model files in the public/models/ folder:\n\n' +
             '• rice_models.keras\n' +
-            '• wheat_model.h5\n' +
-            '• potato_disease_model.h5'
+            '• wheat_densenet_finetuned.h5\n' +
+            '• potato_resnet50_final.keras'
           : 'Error during prediction. Please try again or check the console for details.'
       );
     }

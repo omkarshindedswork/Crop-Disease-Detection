@@ -4,7 +4,7 @@ import * as tf from '@tensorflow/tfjs';
 const MODEL_PATHS = {
   wheat: '/models/wheat_densenet_finetuned.h5',
   rice: '/models/rice_models.keras',
-  potato: '/models/potato_disease_model.h5'
+  potato: '/models/potato_resnet50_final.keras'
 };
 
 // Disease class labels for each crop (in the order your models output them)
@@ -39,8 +39,8 @@ export const DISEASE_LABELS = {
   ],
   potato: [
     'Early Blight',
-    'Healthy',
-    'Late Blight'
+    'Late Blight',
+    'Healthy'
   ]
 };
 
