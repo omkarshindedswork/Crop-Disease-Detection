@@ -3,7 +3,7 @@ import { Menu, X, Upload, Leaf, TrendingUp, CheckCircle, AlertTriangle, Sparkles
 import { DISEASE_LABELS, getDiseaseRecommendation } from './modelLoader';
 
 const API_BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:5000"
+  import.meta.env.VITE_API_BASE_URL || ""
 ).replace(/\/+$/, "");
 
 // ==================== NAVBAR COMPONENT ====================
@@ -217,6 +217,11 @@ const Predictor = ({ setResult }) => {
   const handlePredict = async () => {
     if (!selectedCrop || !uploadedImage) {
       alert('Please select a crop and upload an image first!');
+      return;
+    }
+
+    if (!API_BASE_URL) {
+      alert("Backend URL is missing. Set VITE_API_BASE_URL in Vercel and redeploy.");
       return;
     }
 
