@@ -39,7 +39,7 @@ try:
     models = {
         'rice': keras.models.load_model(os.path.join(BASE_DIR, 'public/models/rice_models.keras')),
         'wheat': keras.models.load_model(os.path.join(BASE_DIR, 'public/models/wheat_densenet_finetuned.h5')),
-        'potato': keras.models.load_model(os.path.join(BASE_DIR, 'public/models/potato_resnet50_final.keras'))
+        'potato': keras.models.load_model(os.path.join(BASE_DIR, 'public/models/potato_disease_model.h5.keras'))
     }
 
     print("✅ Models loaded successfully")
