@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Upload, Leaf, TrendingUp, CheckCircle, AlertTriangle, Sparkles, ArrowRight, ChevronRight } from 'lucide-react';
 import { DISEASE_LABELS, getDiseaseRecommendation } from './modelLoader';
+
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:5000"
+).replace(/\/+$/, "");
+
 // ==================== NAVBAR COMPONENT ====================
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -227,7 +232,7 @@ const Predictor = ({ setResult }) => {
         img.onload = resolve;
         img.onerror = reject;
       });
-      const response = await fetch("http://127.0.0.1:5000/predict", {
+      const response = await fetch(`${API_BASE_URL}/predict`, {
         method: "POST",
         headers: {
                     "Content-Type": "application/json",
@@ -238,11 +243,16 @@ const Predictor = ({ setResult }) => {
   }),
 });
 
-      const prediction = await response.json();
+      let prediction;
+      try {
+        prediction = await response.json();
+      } catch {
+        throw new Error("The backend returned an invalid response. Please check the Render logs.");
+      }
 
       if (!response.ok) {
-        throw new Error(prediction.error || "Prediction failed");
-}
+        throw new Error(prediction.error || `Prediction failed (HTTP ${response.status})`);
+      }
       prediction.disease =
       DISEASE_LABELS[selectedCrop][prediction.predicted_class];
 
@@ -275,13 +285,15 @@ const Predictor = ({ setResult }) => {
       setIsLoading(false);
       
       // Show error message
+      const message = error?.message || "Unknown error";
+      const isNetworkError =
+        error instanceof TypeError ||
+        message.toLowerCase().includes("fetch");
+
       alert(
-        error.message.includes('Failed to load') 
-          ? 'Model file not found! Please ensure you have placed the model files in the public/models/ folder:\n\n' +
-            '• rice_models.keras\n' +
-            '• wheat_densenet_finetuned.h5\n' +
-            '• potato_resnet50_final.keras'
-          : 'Error during prediction. Please try again or check the console for details.'
+        isNetworkError
+          ? `Could not connect to the AgroAI backend at ${API_BASE_URL}. Check that the Render service is live, VITE_API_BASE_URL is set in Vercel, and the backend allows requests from this site.`
+          : message
       );
     }
   };
