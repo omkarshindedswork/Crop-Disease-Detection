@@ -5,7 +5,7 @@ import * as tf from '@tensorflow/tfjs';
 const MODEL_PATHS = {
   wheat: '/models/wheat_densenet_finetuned.h5',
   rice: '/models/rice_models.keras',
-  potato: '/models/potato_resnet50_final.keras'
+  potato: '/models/potato_disease_model.h5'
 };
 
 // Disease class labels for each crop
