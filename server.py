@@ -17,6 +17,7 @@ app = Flask(__name__)
 ALLOWED_ORIGINS = [
     "https://crop-disease-detection-beta.vercel.app",
     "https://crop-disease-detection-5qe79bpq6-omkarshindedsworks-projects.vercel.app",
+    "https://crop-disease-detection-mxh4vh12o-omkarshindedsworks-projects.vercel.app",
 ]
 
 CORS(
