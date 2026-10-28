@@ -13,14 +13,33 @@ os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 app = Flask(__name__)
 CORS(app)
 
+# -------------------- API STATUS ROUTES --------------------
+@app.route("/", methods=["GET"])
+def home():
+    """Confirm that the AgroAI API is running."""
+    return jsonify({
+        "status": "running",
+        "message": "AgroAI Crop Disease Detection API",
+        "prediction_endpoint": "/predict",
+        "health_endpoint": "/health"
+    }), 200
+
+
+@app.route("/health", methods=["GET"])
+def health():
+    """Simple health check for deployment monitoring."""
+    return jsonify({"status": "ok"}), 200
+
 # -------------------- LOAD MODELS --------------------
+models = {}
+
 try:
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
     models = {
         'rice': keras.models.load_model(os.path.join(BASE_DIR, 'public/models/rice_models.keras')),
         'wheat': keras.models.load_model(os.path.join(BASE_DIR, 'public/models/wheat_densenet_finetuned.h5')),
-        'potato': keras.models.load_model(os.path.join(BASE_DIR, 'public/models/potato_disease_model.h5'))
+        'potato': keras.models.load_model(os.path.join(BASE_DIR, 'public/models/potato_resnet50_final.keras'))
     }
 
     print("✅ Models loaded successfully")
@@ -109,7 +128,7 @@ def predict():
         model_type = model_types.get(crop)
 
         if model is None:
-            return jsonify({'error': f'Model not found for {crop}'}), 500
+            return jsonify({'error': f'Model not loaded for {crop}. Check the Render deployment logs and model file paths.'}), 500
 
         # -------- Preprocessing --------
         img_array = preprocess_image(image_data, model_type)
